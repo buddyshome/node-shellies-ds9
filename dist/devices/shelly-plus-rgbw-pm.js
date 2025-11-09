@@ -9,6 +9,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ShellyPlusRGBWPm = void 0;
 const base_1 = require("./base");
 const components_1 = require("../components");
+const rgb_1 = require("../components/rgb");
+const rgbw_1 = require("../components/rgbw");
 class ShellyPlusRGBWPm extends base_1.Device {
     constructor() {
         super(...arguments);
@@ -26,6 +28,8 @@ class ShellyPlusRGBWPm extends base_1.Device {
         this.light1 = new components_1.Light(this, 1);
         this.light2 = new components_1.Light(this, 2);
         this.light3 = new components_1.Light(this, 3);
+        this.rgb0 = new rgb_1.Rgb(this, 0);
+        this.rgbw0 = new rgbw_1.Rgbw(this, 0);
         this.script = new components_1.Script(this);
         this.ui = new components_1.Ui(this);
     }
@@ -74,6 +78,12 @@ __decorate([
 __decorate([
     base_1.component
 ], ShellyPlusRGBWPm.prototype, "light3", void 0);
+__decorate([
+    base_1.component
+], ShellyPlusRGBWPm.prototype, "rgb0", void 0);
+__decorate([
+    base_1.component
+], ShellyPlusRGBWPm.prototype, "rgbw0", void 0);
 __decorate([
     base_1.component
 ], ShellyPlusRGBWPm.prototype, "script", void 0);

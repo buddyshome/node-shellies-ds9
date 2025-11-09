@@ -22,8 +22,8 @@ class ShellyGen4Mini extends base_1.MultiProfileDevice {
         this.script = new components_1.Script(this);
     }
 }
-ShellyGen4Mini.model = "S4SW-001P8EU";
-ShellyGen4Mini.modelName = "Shelly 1PM Gen4 Mini";
+ShellyGen4Mini.model = 'S4SW-001P8EU';
+ShellyGen4Mini.modelName = 'Shelly 1PM Gen4 Mini';
 __decorate([
     base_1.component
 ], ShellyGen4Mini.prototype, "wifi", void 0);

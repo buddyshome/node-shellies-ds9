@@ -1,5 +1,7 @@
 import { Device } from './base';
 import { BluetoothLowEnergy, Cloud, Ethernet, Input, Mqtt, OutboundWebSocket, Script, Light, Ui, WiFi } from '../components';
+import { Rgb } from '../components/rgb';
+import { Rgbw } from '../components/rgbw';
 export declare class ShellyPlusRGBWPm extends Device {
     static readonly model: string;
     static readonly modelName: string;
@@ -17,6 +19,8 @@ export declare class ShellyPlusRGBWPm extends Device {
     readonly light1: Light;
     readonly light2: Light;
     readonly light3: Light;
+    readonly rgb0: Rgb;
+    readonly rgbw0: Rgbw;
     readonly script: Script;
     readonly ui: Ui;
 }
