@@ -37,5 +37,4 @@ __exportStar(require("./shelly-plus-dimmer"), exports);
 __exportStar(require("./shelly-gen3-2-pm"), exports);
 __exportStar(require("./shelly-plus-rgbw-pm"), exports);
 __exportStar(require("./shelly-gen4-1-pm"), exports);
-__exportStar(require("./shelly-pro-2-cover-pm"), exports);
 //# sourceMappingURL=index.js.map
