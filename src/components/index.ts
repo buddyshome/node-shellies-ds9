@@ -17,3 +17,5 @@ export * from './temperature';
 export * from './ui';
 export * from './wifi';
 export * from './pm1';
+export * from './rgb';
+export * from './rgbw';

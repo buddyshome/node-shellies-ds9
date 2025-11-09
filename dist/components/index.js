@@ -33,4 +33,6 @@ __exportStar(require("./temperature"), exports);
 __exportStar(require("./ui"), exports);
 __exportStar(require("./wifi"), exports);
 __exportStar(require("./pm1"), exports);
+__exportStar(require("./rgb"), exports);
+__exportStar(require("./rgbw"), exports);
 //# sourceMappingURL=index.js.map
