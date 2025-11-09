@@ -20,5 +20,6 @@ export * from "./shelly-pro-dual-cover-pm";
 export * from "./shelly-plus-dimmer-pm";
 export * from "./shelly-plus-dimmer";
 export * from "./shelly-gen3-2-pm";
-export * from './shelly-plus-rgbw-pm';
+export * from "./shelly-plus-rgbw-pm";
 export * from "./shelly-gen4-1-pm";
+export * from "./shelly-pro-2-cover-pm";
