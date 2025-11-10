@@ -14,15 +14,18 @@ const base_1 = require("./base");
 class Pm1 extends base_1.ComponentWithId {
     constructor(device, id = 0) {
         super('Pm1', device, id);
-        /**
-        * true if the output channel is currently on, false otherwise.
-        */
-        this.output = false;
+    }
+    /**
+     * This method resets associated counters.
+     * @param type - Array of strings, selects which counter to reset.
+     */
+    resetCounters(type) {
+        return this.rpc('ResetCounters', {
+            id: this.id,
+            type,
+        });
     }
 }
-__decorate([
-    base_1.characteristic
-], Pm1.prototype, "output", void 0);
 __decorate([
     base_1.characteristic
 ], Pm1.prototype, "voltage", void 0);

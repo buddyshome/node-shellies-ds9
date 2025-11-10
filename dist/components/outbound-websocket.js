@@ -15,7 +15,7 @@ class OutboundWebSocket extends base_1.Component {
     constructor(device) {
         super('Ws', device);
         /**
-         * Whether an outbound WebSocket connection is established.
+         * True if device is connected to a websocket outbound connection or false otherwise.
          */
         this.connected = false;
     }

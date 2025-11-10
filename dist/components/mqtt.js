@@ -15,7 +15,7 @@ class Mqtt extends base_1.Component {
     constructor(device) {
         super('MQTT', device);
         /**
-         * Whether the device is connected to an MQTT server.
+         * True if the device is MQTT connected, false otherwise.
          */
         this.connected = false;
     }

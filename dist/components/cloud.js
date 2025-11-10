@@ -15,7 +15,7 @@ class Cloud extends base_1.Component {
     constructor(device) {
         super('Cloud', device);
         /**
-         * Whether the device is connected to the Shelly cloud.
+         * True if the device is connected to the Shelly cloud, false otherwise.
          */
         this.connected = false;
     }

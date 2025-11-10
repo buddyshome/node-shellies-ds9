@@ -35,4 +35,5 @@ __exportStar(require("./wifi"), exports);
 __exportStar(require("./pm1"), exports);
 __exportStar(require("./rgb"), exports);
 __exportStar(require("./rgbw"), exports);
+__exportStar(require("./cct"), exports);
 //# sourceMappingURL=index.js.map

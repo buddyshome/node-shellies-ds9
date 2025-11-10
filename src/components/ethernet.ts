@@ -7,11 +7,14 @@ export interface EthernetAttributes {
 
 export interface EthernetConfig {
   enable: boolean;
+  server_mode: boolean;
   ipv4mode: 'dhcp' | 'static';
   ip: string | null;
   netmask: string | null;
   gw: string | null;
   nameserver: string | null;
+  dhcp_start: string;
+  dhcp_end: string;
 }
 
 /**
@@ -19,7 +22,7 @@ export interface EthernetConfig {
  */
 export class Ethernet extends Component<EthernetAttributes, EthernetConfig> implements EthernetAttributes {
   /**
-   * IP address of the device.
+   * IP of the device in the network.
    */
   @characteristic
   readonly ip: string | null = null;

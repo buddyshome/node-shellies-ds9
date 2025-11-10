@@ -15,39 +15,44 @@ class System extends base_1.Component {
     constructor(device) {
         super('Sys', device);
         /**
-         * MAC address of the device.
+         * Mac address of the device.
          */
         this.mac = '';
         /**
-         * true if a restart is required, false otherwise.
+         * True if restart is required, false otherwise.
          */
         this.restart_required = false;
         /**
-         * Local time in the current timezone (HH:MM).
+         * Current time in the format HH:MM (24-hour time format in the current timezone with leading zero).
+         * Null when time is not synced from NTP server.
          */
         this.time = '';
         /**
-         * Current time in UTC as a UNIX timestamp.
+         * Unix timestamp (in UTC), null when time is not synced from NTP server.
          */
         this.unixtime = 0;
+        /**
+         * Last time the system synced time from NTP server (in UTC), null when time is not synced from NTP server.
+         */
+        this.last_sync_ts = null;
         /**
          * Time in seconds since last reboot.
          */
         this.uptime = 0;
         /**
-         * Total RAM, in bytes.
+         * Total size of the RAM in the system in Bytes.
          */
         this.ram_size = 0;
         /**
-         * Available RAM, in bytes.
+         * Size of the free RAM in the system in Bytes.
          */
         this.ram_free = 0;
         /**
-         * File system total size, in bytes.
+         * Total size of the file system in Bytes.
          */
         this.fs_size = 0;
         /**
-         * File system available size, in bytes.
+         * Size of the free file system in Bytes.
          */
         this.fs_free = 0;
         /**
@@ -59,9 +64,13 @@ class System extends base_1.Component {
          */
         this.kvs_rev = 0;
         /**
-         * Available firmware updates, if any.
+         * Information about available updates, similar to the one returned by Shelly.CheckForUpdate
          */
         this.available_updates = {};
+        /**
+         * Time offset (in seconds). This is the difference between the device local time and UTC.
+         */
+        this.utc_offset = 0;
     }
     handleEvent(event) {
         switch (event.event) {
@@ -80,6 +89,15 @@ class System extends base_1.Component {
             case 'sleep':
                 this.emit('sleep');
                 break;
+            case 'scheduled_restart':
+                this.emit('scheduledRestart');
+                break;
+            case 'component_added':
+                this.emit('componentAdded', event.target);
+                break;
+            case 'component_removed':
+                this.emit('componentRemoved', event.target);
+                break;
             default:
                 super.handleEvent(event);
         }
@@ -97,6 +115,9 @@ __decorate([
 __decorate([
     base_1.characteristic
 ], System.prototype, "unixtime", void 0);
+__decorate([
+    base_1.characteristic
+], System.prototype, "last_sync_ts", void 0);
 __decorate([
     base_1.characteristic
 ], System.prototype, "uptime", void 0);
@@ -126,9 +147,24 @@ __decorate([
 ], System.prototype, "webhook_rev", void 0);
 __decorate([
     base_1.characteristic
+], System.prototype, "knx_rev", void 0);
+__decorate([
+    base_1.characteristic
+], System.prototype, "btrelay_rev", void 0);
+__decorate([
+    base_1.characteristic
+], System.prototype, "bthc_rev", void 0);
+__decorate([
+    base_1.characteristic
 ], System.prototype, "available_updates", void 0);
 __decorate([
     base_1.characteristic
 ], System.prototype, "wakeup_reason", void 0);
+__decorate([
+    base_1.characteristic
+], System.prototype, "wakeup_period", void 0);
+__decorate([
+    base_1.characteristic
+], System.prototype, "utc_offset", void 0);
 exports.System = System;
 //# sourceMappingURL=system.js.map

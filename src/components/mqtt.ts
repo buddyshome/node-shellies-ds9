@@ -15,6 +15,8 @@ export interface MqttConfig {
   topic_prefix: string | null;
   rpc_ntf: boolean;
   status_ntf: boolean;
+  use_client_cert: boolean;
+  enable_control: boolean;
 }
 
 /**
@@ -22,7 +24,7 @@ export interface MqttConfig {
  */
 export class Mqtt extends Component<MqttAttributes, MqttConfig> implements MqttAttributes {
   /**
-   * Whether the device is connected to an MQTT server.
+   * True if the device is MQTT connected, false otherwise.
    */
   @characteristic
   readonly connected: boolean = false;

@@ -1,4 +1,4 @@
-import { JSONRPCClient, JSONRPCRequest, JSONRPCResponse, SendRequest } from "json-rpc-2.0";
+import { JSONRPCClient, JSONRPCRequest, JSONRPCResponse, SendRequest } from 'json-rpc-2.0';
 /**
  * Authentication challenge parameters sent by the server when a protected resource is requested.
  */
@@ -18,7 +18,7 @@ export interface RpcAuthResponse {
     nonce: number;
     cnonce: number;
     response: string;
-    algorithm: "SHA-256";
+    algorithm: 'SHA-256';
 }
 /**
  * A request with authentication response parameters.

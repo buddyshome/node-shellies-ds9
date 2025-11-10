@@ -13,7 +13,7 @@ export interface OutboundWebSocketConfig {
  */
 export declare class OutboundWebSocket extends Component<OutboundWebSocketAttributes, OutboundWebSocketConfig> implements OutboundWebSocketAttributes {
     /**
-     * Whether an outbound WebSocket connection is established.
+     * True if device is connected to a websocket outbound connection or false otherwise.
      */
     readonly connected: boolean;
     constructor(device: Device);

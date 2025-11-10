@@ -18,6 +18,7 @@ export interface SystemAttributes {
     restart_required: boolean;
     time: string;
     unixtime: number;
+    last_sync_ts: number | null;
     uptime: number;
     ram_size: number;
     ram_free: number;
@@ -27,8 +28,13 @@ export interface SystemAttributes {
     kvs_rev: number;
     schedule_rev?: number;
     webhook_rev?: number;
+    knx_rev?: number;
+    btrelay_rev?: number;
+    bthc_rev?: number;
     available_updates: SystemFirmwareUpdate;
     wakeup_reason?: SystemWakeupReason;
+    wakeup_period?: number;
+    utc_offset: number;
 }
 export interface SystemConfig {
     device: {
@@ -38,6 +44,8 @@ export interface SystemConfig {
         fw_id: string;
         profile?: string;
         discoverable: boolean;
+        addon_type?: string | null;
+        sys_btn_toggle?: boolean;
     };
     location: {
         tz: string | null;
@@ -73,39 +81,44 @@ export interface SystemConfig {
  */
 export declare class System extends Component<SystemAttributes, SystemConfig> implements SystemAttributes {
     /**
-     * MAC address of the device.
+     * Mac address of the device.
      */
     readonly mac: string;
     /**
-     * true if a restart is required, false otherwise.
+     * True if restart is required, false otherwise.
      */
     readonly restart_required: boolean;
     /**
-     * Local time in the current timezone (HH:MM).
+     * Current time in the format HH:MM (24-hour time format in the current timezone with leading zero).
+     * Null when time is not synced from NTP server.
      */
     readonly time: string;
     /**
-     * Current time in UTC as a UNIX timestamp.
+     * Unix timestamp (in UTC), null when time is not synced from NTP server.
      */
     readonly unixtime: number;
+    /**
+     * Last time the system synced time from NTP server (in UTC), null when time is not synced from NTP server.
+     */
+    readonly last_sync_ts: number | null;
     /**
      * Time in seconds since last reboot.
      */
     readonly uptime: number;
     /**
-     * Total RAM, in bytes.
+     * Total size of the RAM in the system in Bytes.
      */
     readonly ram_size: number;
     /**
-     * Available RAM, in bytes.
+     * Size of the free RAM in the system in Bytes.
      */
     readonly ram_free: number;
     /**
-     * File system total size, in bytes.
+     * Total size of the file system in Bytes.
      */
     readonly fs_size: number;
     /**
-     * File system available size, in bytes.
+     * Size of the free file system in Bytes.
      */
     readonly fs_free: number;
     /**
@@ -117,21 +130,41 @@ export declare class System extends Component<SystemAttributes, SystemConfig> im
      */
     readonly kvs_rev: number;
     /**
-     * Schedule revision number (present if schedules are enabled).
+     * Schedules revision number, present if schedules are enabled.
      */
     readonly schedule_rev: number | undefined;
     /**
-     * Webhook revision number (present if schedules are enabled).
+     * Webhooks revision number, present if webhooks are enabled.
      */
     readonly webhook_rev: number | undefined;
     /**
-     * Available firmware updates, if any.
+     * KNX configuration revision number, present on devices supporting KNX with KNX enabled.
+     */
+    readonly knx_rev: number | undefined;
+    /**
+     * BLE cloud relay configuration revision number, present on devices supporting BLE cloud relay functionality.
+     */
+    readonly btrelay_rev: number | undefined;
+    /**
+     * BTHomeControl configuration revision number, present when device supports control with BLU devices.
+     */
+    readonly bthc_rev: number | undefined;
+    /**
+     * Information about available updates, similar to the one returned by Shelly.CheckForUpdate
      */
     readonly available_updates: SystemFirmwareUpdate;
     /**
      * Information about boot type and cause (only for battery-operated devices).
      */
     readonly wakeup_reason: SystemWakeupReason | undefined;
+    /**
+     * Period (in seconds) at which device wakes up and sends "keep-alive" packet to cloud, readonly. Count starts from last full wakeup.
+     */
+    readonly wakeup_period: number | undefined;
+    /**
+     * Time offset (in seconds). This is the difference between the device local time and UTC.
+     */
+    readonly utc_offset: number;
     constructor(device: Device);
     handleEvent(event: RpcEvent): void;
 }

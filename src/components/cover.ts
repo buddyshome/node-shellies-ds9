@@ -20,18 +20,22 @@ export interface CoverAttributes {
   voltage: number;
   current: number;
   pf: number;
+  freq: number;
   aenergy: CoverEnergyCounterAttributes;
   current_pos: number | null;
   target_pos: number | null;
   move_timeout?: number;
   move_started_at?: number;
   pos_control: boolean;
+  last_direction: 'open' | 'close' | null;
   temperature?: CoverTemperatureAttributes;
+  slat_pos?: number | null;
   errors?: string[];
 }
 
 export interface CoverAcMotorConfig {
   idle_power_thr: number;
+  idle_confirm_period: number;
 }
 
 export interface CoverObstructionDetectionConfig {
@@ -49,10 +53,20 @@ export interface CoverSafetySwitchConfig {
   allowed_move: 'reverse' | null;
 }
 
+export interface CoverSlatConfig {
+  enable: boolean;
+  open_time: number;
+  close_time: number;
+  step: number;
+  retain_pos: boolean;
+  precise_ctl: boolean;
+}
+
 export interface CoverConfig {
   id: number;
   name: string | null;
   in_mode?: 'single' | 'dual' | 'detached';
+  in_locked: boolean;
   initial_state: 'open' | 'closed' | 'stopped';
   power_limit: number;
   voltage_limit: number;
@@ -62,8 +76,10 @@ export interface CoverConfig {
   maxtime_close: number;
   swap_inputs?: boolean;
   invert_directions: boolean;
+  maintenance_mode: boolean;
   obstruction_detection: CoverObstructionDetectionConfig;
   safety_switch?: CoverSafetySwitchConfig;
+  slat?: CoverSlatConfig;
 }
 
 /**
@@ -83,32 +99,37 @@ export class Cover extends ComponentWithId<CoverAttributes, CoverConfig> impleme
   readonly state: 'open' | 'closed' | 'opening' | 'closing' | 'stopped' | 'calibrating' = 'stopped';
 
   /**
-   * The current (last measured) instantaneous power delivered to the attached
-   * load.
+   * Active power in Watts.
    */
   @characteristic
   readonly apower: number = 0;
 
   /**
-   * Last measured voltage (in Volts).
+   * Volts.
    */
   @characteristic
   readonly voltage: number = 0;
 
   /**
-   * Last measured current (in Amperes).
+   * Amperes.
    */
   @characteristic
   readonly current: number = 0;
 
   /**
-   * Last measured power factor.
+   * power factor.
    */
   @characteristic
   readonly pf: number = 0;
 
   /**
-   * Information about the energy counter.
+   * network frequency, Hz.
+   */
+  @characteristic
+  readonly freq: number = 0;
+
+  /**
+   * Energy counter information, same as in the Switch component status.
    */
   @characteristic
   readonly aenergy: CoverEnergyCounterAttributes = {
@@ -118,44 +139,62 @@ export class Cover extends ComponentWithId<CoverAttributes, CoverConfig> impleme
     };
 
   /**
-   * The current position in percent, from `0` (fully closed) to `100` (fully open); or `null` if not calibrated.
+   * Only present if Cover is calibrated.
+   * Represents current position in percent from 0 (fully closed) to 100 (fully open); null if the position is unknown.
    */
   @characteristic
   readonly current_pos: number | null = null;
 
   /**
-   * The requested target position in percent, from `0` (fully closed) to `100` (fully open); or `null` if not calibrated
-   * or not actively moving.
+   * Only present if Cover is calibrated and is actively moving to a requested position in either open or closed directions.
+   * Represents the target position in percent from 0 (fully closed) to 100 (fully open); null if target position has been
+   * reached or the movement was canceled.
    */
   @characteristic
   readonly target_pos: number | null = null;
 
   /**
-   * A timeout (in seconds) after which the cover will automatically stop moving; or `undefined` if not actively moving.
+   * Seconds, only present if Cover is actively moving in either open or closed directions.
+   * Cover will automatically stop after the timeout expires.
    */
   @characteristic
   readonly move_timeout: number | undefined;
 
   /**
-   * The time at which the movement began; or `undefined` if not actively moving.
+   * Only present if Cover is actively moving in either open or closed directions. Represents the time at which the
+   * movement has begun.
    */
   @characteristic
   readonly move_started_at: number | undefined;
 
   /**
-   * Whether the cover has been calibrated.
+   * False if Cover is not calibrated and only discrete open/close is possible; true if Cover is calibrated and can be
+   * commanded to go to arbitrary positions between fully open and fully closed.
    */
   @characteristic
   readonly pos_control: boolean = false;
 
   /**
-   * Information about the temperature sensor (if applicable).
+   * Direction of the last movement: open/close or null when unknown.
+   */
+  @characteristic
+  readonly last_direction: 'open' | 'close' | null = null;
+
+  /**
+   * Temperature sensor information, only present if a temperature monitor is associated with the Cover instance.
    */
   @characteristic
   readonly temperature: CoverTemperatureAttributes | undefined;
 
   /**
-   * Any error conditions that have occurred.
+   * Only present if slat control is supported and enabled. Represents current slat position in percent
+   * from 0 (fully closed) to 100 (fully open); null if the position is unknown.
+   */
+  @characteristic
+  readonly slat_pos?: number | null;
+
+  /**
+   * Only present if an error condition has occurred.
    */
   @characteristic
   readonly errors: string[] | undefined;
@@ -215,6 +254,17 @@ export class Cover extends ComponentWithId<CoverAttributes, CoverConfig> impleme
   calibrate(): PromiseLike<null> {
     return this.rpc<null>('Calibrate', {
       id: this.id,
+    });
+  }
+
+  /**
+   * This method resets associated counters.
+   * @param type - Array of strings, selects which counter to reset.
+   */
+  resetCounters(type?: string[]): PromiseLike<null> {
+    return this.rpc<null>('ResetCounters', {
+      id: this.id,
+      type,
     });
   }
 }

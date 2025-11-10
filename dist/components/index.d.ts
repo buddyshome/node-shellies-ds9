@@ -19,4 +19,5 @@ export * from './wifi';
 export * from './pm1';
 export * from './rgb';
 export * from './rgbw';
+export * from './cct';
 //# sourceMappingURL=index.d.ts.map

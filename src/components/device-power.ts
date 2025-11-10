@@ -34,13 +34,13 @@ export class DevicePower extends ComponentWithId<DevicePowerAttributes, DevicePo
     };
 
   /**
-   * Information about the external power source.
+   * Information about the external power source (only available if external power source is supported).
    */
   @characteristic
   readonly external: DevicePowerExternalSource | undefined;
 
   /**
-   * Any error conditions that have occurred.
+   * Whether external power source is connected.
    */
   @characteristic
   readonly errors: string[] | undefined;

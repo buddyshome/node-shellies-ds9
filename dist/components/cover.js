@@ -23,24 +23,27 @@ class Cover extends base_1.ComponentWithId {
          */
         this.state = 'stopped';
         /**
-         * The current (last measured) instantaneous power delivered to the attached
-         * load.
+         * Active power in Watts.
          */
         this.apower = 0;
         /**
-         * Last measured voltage (in Volts).
+         * Volts.
          */
         this.voltage = 0;
         /**
-         * Last measured current (in Amperes).
+         * Amperes.
          */
         this.current = 0;
         /**
-         * Last measured power factor.
+         * power factor.
          */
         this.pf = 0;
         /**
-         * Information about the energy counter.
+         * network frequency, Hz.
+         */
+        this.freq = 0;
+        /**
+         * Energy counter information, same as in the Switch component status.
          */
         this.aenergy = {
             total: 0,
@@ -48,18 +51,25 @@ class Cover extends base_1.ComponentWithId {
             minute_ts: 0,
         };
         /**
-         * The current position in percent, from `0` (fully closed) to `100` (fully open); or `null` if not calibrated.
+         * Only present if Cover is calibrated.
+         * Represents current position in percent from 0 (fully closed) to 100 (fully open); null if the position is unknown.
          */
         this.current_pos = null;
         /**
-         * The requested target position in percent, from `0` (fully closed) to `100` (fully open); or `null` if not calibrated
-         * or not actively moving.
+         * Only present if Cover is calibrated and is actively moving to a requested position in either open or closed directions.
+         * Represents the target position in percent from 0 (fully closed) to 100 (fully open); null if target position has been
+         * reached or the movement was canceled.
          */
         this.target_pos = null;
         /**
-         * Whether the cover has been calibrated.
+         * False if Cover is not calibrated and only discrete open/close is possible; true if Cover is calibrated and can be
+         * commanded to go to arbitrary positions between fully open and fully closed.
          */
         this.pos_control = false;
+        /**
+         * Direction of the last movement: open/close or null when unknown.
+         */
+        this.last_direction = null;
     }
     /**
      * Opens the cover.
@@ -110,6 +120,16 @@ class Cover extends base_1.ComponentWithId {
             id: this.id,
         });
     }
+    /**
+     * This method resets associated counters.
+     * @param type - Array of strings, selects which counter to reset.
+     */
+    resetCounters(type) {
+        return this.rpc('ResetCounters', {
+            id: this.id,
+            type,
+        });
+    }
 }
 __decorate([
     base_1.characteristic
@@ -131,6 +151,9 @@ __decorate([
 ], Cover.prototype, "pf", void 0);
 __decorate([
     base_1.characteristic
+], Cover.prototype, "freq", void 0);
+__decorate([
+    base_1.characteristic
 ], Cover.prototype, "aenergy", void 0);
 __decorate([
     base_1.characteristic
@@ -149,7 +172,13 @@ __decorate([
 ], Cover.prototype, "pos_control", void 0);
 __decorate([
     base_1.characteristic
+], Cover.prototype, "last_direction", void 0);
+__decorate([
+    base_1.characteristic
 ], Cover.prototype, "temperature", void 0);
+__decorate([
+    base_1.characteristic
+], Cover.prototype, "slat_pos", void 0);
 __decorate([
     base_1.characteristic
 ], Cover.prototype, "errors", void 0);

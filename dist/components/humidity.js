@@ -15,7 +15,7 @@ class Humidity extends base_1.ComponentWithId {
     constructor(device, id = 0) {
         super('Humidity', device, id);
         /**
-         * Relative humidity, in percent.
+         * Relative humidity in % (null if valid value could not be obtained).
          */
         this.rh = null;
     }

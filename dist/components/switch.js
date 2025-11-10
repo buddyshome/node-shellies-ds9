@@ -15,7 +15,7 @@ class Switch extends base_1.ComponentWithId {
     constructor(device, id = 0) {
         super('Switch', device, id);
         /**
-         * Source of the last command.
+         * Source of the last command, for example: init, WS_in, http, ...
          */
         this.source = '';
         /**
@@ -23,7 +23,7 @@ class Switch extends base_1.ComponentWithId {
          */
         this.output = false;
         /**
-         * Information about the temperature.
+         * Information about the temperature (shown if applicable).
          */
         this.temperature = {
             tC: null,
@@ -48,6 +48,16 @@ class Switch extends base_1.ComponentWithId {
             id: this.id,
             on,
             toggle_after,
+        });
+    }
+    /**
+     * This method resets associated counters.
+     * @param type - Array of strings, selects which counter to reset.
+     */
+    resetCounters(type) {
+        return this.rpc('ResetCounters', {
+            id: this.id,
+            type,
         });
     }
 }
@@ -77,7 +87,13 @@ __decorate([
 ], Switch.prototype, "pf", void 0);
 __decorate([
     base_1.characteristic
+], Switch.prototype, "freq", void 0);
+__decorate([
+    base_1.characteristic
 ], Switch.prototype, "aenergy", void 0);
+__decorate([
+    base_1.characteristic
+], Switch.prototype, "ret_aenergy", void 0);
 __decorate([
     base_1.characteristic
 ], Switch.prototype, "temperature", void 0);

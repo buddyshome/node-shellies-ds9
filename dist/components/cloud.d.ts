@@ -12,7 +12,7 @@ export interface CloudConfig {
  */
 export declare class Cloud extends Component<CloudAttributes, CloudConfig> implements CloudAttributes {
     /**
-     * Whether the device is connected to the Shelly cloud.
+     * True if the device is connected to the Shelly cloud, false otherwise.
      */
     readonly connected: boolean;
     constructor(device: Device);

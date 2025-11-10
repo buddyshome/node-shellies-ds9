@@ -15,11 +15,11 @@ class Temperature extends base_1.ComponentWithId {
     constructor(device, id = 0) {
         super('Temperature', device, id);
         /**
-         * Current temperature, in Celsius.
+         * Temperature in Celsius (null if valid value could not be obtained).
          */
         this.tC = null;
         /**
-         * Current temperature, in Fahrenheit.
+         * Temperature in Fahrenheit (null if valid value could not be obtained).
          */
         this.tF = null;
     }

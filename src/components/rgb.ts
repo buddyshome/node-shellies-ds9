@@ -1,6 +1,27 @@
 import { characteristic, ComponentWithId } from './base';
 import { Device } from '../devices';
 
+export interface RgbTransitionAttributes {
+  target: {
+    output: boolean;
+    rgb: number[];
+    brightness: number;
+  };
+  started_at: number;
+  duration: number;
+}
+
+export interface RgbTemperatureAttributes {
+  tC: number | null;
+  tF: number | null;
+}
+
+export interface RgbEnergyCounterAttributes {
+  total: number;
+  by_minute: number[];
+  minute_ts: number;
+}
+
 export interface RgbAttributes {
   id: number;
   source: string;
@@ -9,6 +30,27 @@ export interface RgbAttributes {
   brightness: number;
   timer_started_at?: number;
   timer_duration?: number;
+  transition?: RgbTransitionAttributes;
+  temperature?: RgbTemperatureAttributes;
+  aenergy?: RgbEnergyCounterAttributes;
+  apower?: number;
+  voltage?: number;
+  current?: number;
+  errors?: string[];
+}
+
+export interface RgbNightModeConfig {
+  enable: boolean;
+  brightness: number | null;
+  rgb: number[] | null;
+  active_between?: string[];
+}
+
+export interface RgbButtonPresetsConfig {
+  button_doublepush: {
+    brightness: number | null;
+    rgb: number[] | null;
+  };
 }
 
 export interface RgbConfig {
@@ -22,12 +64,12 @@ export interface RgbConfig {
   auto_off_delay: number;
   transition_duration: number;
   min_brightness_on_toggle: number;
-  night_mode: {
-    enable: boolean;
-    brightness: number | null;
-    rgb: number[] | null;
-    active_between?: string[];
-  };
+  night_mode: RgbNightModeConfig;
+  button_fade_rate: number;
+  button_presets: RgbButtonPresetsConfig;
+  current_limit?: number;
+  power_limit?: number;
+  voltage_limit?: number;
 }
 
 /**
@@ -35,40 +77,85 @@ export interface RgbConfig {
  */
 export class Rgb extends ComponentWithId<RgbAttributes, RgbConfig> implements RgbAttributes {
   /**
-   * Source of the last command.
+   * Source of the last command, for example: init, WS_in, http, ...
    */
   @characteristic
   readonly source: string = '';
 
   /**
-   * true if the output channel is currently on, false otherwise.
+   * True if the output channel is currently on, false otherwise.
    */
   @characteristic
   readonly output: boolean = false;
 
   /**
-   * Current Red, Green, Blue [r,g,b] level 0..255
+   * Current Red, Green, Blue [r,g,b] level 0..255.
    */
   @characteristic
   readonly rgb: number[] = [0, 0, 0];
 
   /**
-   * Current brightness level, in percent.
+   * Current brightness level (in percent).
    */
   @characteristic
   readonly brightness: number = 0;
 
   /**
-   * Start time of the timer (as a UNIX timestamp, in UTC).
+   * Unix timestamp, start time of the timer (in UTC) (shown if the timer is triggered).
    */
   @characteristic
   readonly timer_started_at: number | undefined;
 
   /**
-   * Duration of the timer, in seconds.
+   * Duration of the timer in seconds (shown if the timer is triggered).
    */
   @characteristic
   readonly timer_duration: number | undefined;
+
+  /**
+   * Information about the transition (shown if transition is triggered).
+   */
+  @characteristic
+  readonly transition?: RgbTransitionAttributes;
+
+  /**
+   * Information about the temperature (shown if applicable).
+   */
+  @characteristic
+  readonly temperature: RgbTemperatureAttributes = {
+      tC: null,
+      tF: null,
+    };
+
+  /**
+   * Information about the active energy counter (shown if applicable).
+   */
+  @characteristic
+  readonly aenergy: RgbEnergyCounterAttributes | undefined;
+
+  /**
+   * Last measured instantaneous active power (in Watts) delivered to the attached load (shown if applicable).
+   */
+  @characteristic
+  readonly apower: number | undefined;
+
+  /**
+   * Last measured voltage in Volts (shown if applicable).
+   */
+  @characteristic
+  readonly voltage: number | undefined;
+
+  /**
+   * Last measured current in Amperes (shown if applicable).
+   */
+  @characteristic
+  readonly current: number | undefined;
+
+  /**
+   * Error conditions occurred. May contain overtemp, (shown if at least one error is present).
+   */
+  @characteristic
+  readonly errors: string[] | undefined;
 
   constructor(device: Device, id = 0) {
     super('Rgb', device, id);
@@ -98,6 +185,39 @@ export class Rgb extends ComponentWithId<RgbAttributes, RgbConfig> implements Rg
       brightness,
       rgb,
       toggle_after,
+    });
+  }
+
+  /**
+   * This method dims up the brightness level.
+   * @param fade_rate - Fade rate of the brightness level dimming. Range [1,5] where 5 is fastest, 1 is slowest.
+   *                    If not provided, value is defaulted to button_fade_rate.
+   */
+  dimUp(fade_rate?: number): PromiseLike<null> {
+    return this.rpc<null>('DimUp', {
+      id: this.id,
+      fade_rate,
+    });
+  }
+
+  /**
+   * This method dims down the brightness level.
+   * @param fade_rate - Fade rate of the brightness level dimming. Range [1,5] where 5 is fastest, 1 is slowest.
+   *                    If not provided, value is defaulted to button_fade_rate.
+   */
+  dimDown(fade_rate?: number): PromiseLike<null> {
+    return this.rpc<null>('DimDown', {
+      id: this.id,
+      fade_rate,
+    });
+  }
+
+  /**
+   * This method stops the dimming of the brightness level.
+   */
+  dimStop(): PromiseLike<null> {
+    return this.rpc<null>('DimStop', {
+      id: this.id,
     });
   }
 }

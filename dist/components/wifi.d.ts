@@ -5,12 +5,22 @@ export interface WiFiAttributes {
     sta_ip: string | null;
     status: 'disconnected' | 'connecting' | 'connected' | 'got ip';
     ssid: string | null;
+    bssid?: string;
     rssi: number;
     ap_client_count?: number;
 }
+export interface WiFiApConfig {
+    ssid: string | null;
+    pass: string | null;
+    is_open: boolean;
+    enable: boolean;
+    range_extender?: {
+        enable: boolean;
+    };
+}
 export interface WiFiStationConfig {
     ssid: string | null;
-    pass?: string | null;
+    pass: string | null;
     is_open: boolean;
     enable: boolean;
     ipv4mode: 'dhcp' | 'static';
@@ -19,21 +29,15 @@ export interface WiFiStationConfig {
     gw: string | null;
     nameserver: string | null;
 }
+export interface WiFiRoamingConfig {
+    rssi_thr: number;
+    interval: number;
+}
 export interface WiFiConfig {
-    ap: {
-        ssid: string | null;
-        is_open: boolean;
-        enable: boolean;
-        range_extender?: {
-            enable: boolean;
-        };
-    };
+    ap: WiFiApConfig;
     sta: WiFiStationConfig;
     sta1: WiFiStationConfig;
-    roam: {
-        rssi_thr: number;
-        interval: number;
-    };
+    roam: WiFiRoamingConfig;
 }
 export interface WiFiScanResponse {
     results: Array<{
@@ -59,23 +63,28 @@ export interface WiFiListApClientsResponse {
  */
 export declare class WiFi extends Component<WiFiAttributes, WiFiConfig> implements WiFiAttributes {
     /**
-     * IP address of the device.
+     * Ip of the device in the network (null if disconnected)
      */
     readonly sta_ip: string | null;
     /**
-     * Status of the connection.
+     * Status of the connection. Range of values: disconnected, connecting, connected, got ip.
      */
     readonly status: 'disconnected' | 'connecting' | 'connected' | 'got ip';
     /**
-     * SSID of the network.
+     * SSID of the network (null if disconnected).
      */
     readonly ssid: string | null;
     /**
-     * Signal strength, in dBms.
+     * BSSID of the currently connected AP, only when connected
+     */
+    readonly bssid: string | undefined;
+    /**
+     * Strength of the signal in dBms.
      */
     readonly rssi: number;
     /**
-     * Number of clients connected to the access point.
+     * Number of clients connected to the access point. Present only when AP is enabled and range extender
+     * functionality is present and enabled.
      */
     readonly ap_client_count: number | undefined;
     constructor(device: Device);

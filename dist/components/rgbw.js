@@ -15,25 +15,32 @@ class Rgbw extends base_1.ComponentWithId {
     constructor(device, id = 0) {
         super('Rgbw', device, id);
         /**
-         * Source of the last command.
+         * Source of the last command, for example: init, WS_in, http, ...
          */
         this.source = '';
         /**
-         * true if the output channel is currently on, false otherwise.
+         * True if the output channel is currently on, false otherwise.
          */
         this.output = false;
         /**
-         * Current Red, Green, Blue [r,g,b] level 0..255
+         * Current Red, Green, Blue [r,g,b] level 0..255.
          */
         this.rgb = [0, 0, 0];
         /**
-         * Current brightness level, in percent.
+         * Current brightness level (in percent).
          */
         this.brightness = 0;
         /**
          * Current white level 0..255.
          */
         this.white = 0;
+        /**
+         * Information about the temperature (shown if applicable).
+         */
+        this.temperature = {
+            tC: null,
+            tF: null,
+        };
     }
     /**
      * Toggles the output state.
@@ -49,17 +56,45 @@ class Rgbw extends base_1.ComponentWithId {
      * @param on - Whether to switch on or off.
      * @param brightness - Brightness level.
      * @param rgb - Red, Green, Blue [r,g,b] - each value represents level between 0..255.
-     * @param white - White level 0..255
      * @param toggle_after - Flip-back timer, in seconds.
      */
-    set(on, brightness, rgb, white, toggle_after) {
+    set(on, brightness, rgb, toggle_after) {
         return this.rpc('Set', {
             id: this.id,
             on,
             brightness,
             rgb,
-            white,
             toggle_after,
+        });
+    }
+    /**
+     * This method dims up the brightness level.
+     * @param fade_rate - Fade rate of the brightness level dimming. Range [1,5] where 5 is fastest, 1 is slowest.
+     *                    If not provided, value is defaulted to button_fade_rate.
+     */
+    dimUp(fade_rate) {
+        return this.rpc('DimUp', {
+            id: this.id,
+            fade_rate,
+        });
+    }
+    /**
+     * This method dims down the brightness level.
+     * @param fade_rate - Fade rate of the brightness level dimming. Range [1,5] where 5 is fastest, 1 is slowest.
+     *                    If not provided, value is defaulted to button_fade_rate.
+     */
+    dimDown(fade_rate) {
+        return this.rpc('DimDown', {
+            id: this.id,
+            fade_rate,
+        });
+    }
+    /**
+     * This method stops the dimming of the brightness level.
+     */
+    dimStop() {
+        return this.rpc('DimStop', {
+            id: this.id,
         });
     }
 }
@@ -84,5 +119,26 @@ __decorate([
 __decorate([
     base_1.characteristic
 ], Rgbw.prototype, "timer_duration", void 0);
+__decorate([
+    base_1.characteristic
+], Rgbw.prototype, "transition", void 0);
+__decorate([
+    base_1.characteristic
+], Rgbw.prototype, "temperature", void 0);
+__decorate([
+    base_1.characteristic
+], Rgbw.prototype, "aenergy", void 0);
+__decorate([
+    base_1.characteristic
+], Rgbw.prototype, "apower", void 0);
+__decorate([
+    base_1.characteristic
+], Rgbw.prototype, "voltage", void 0);
+__decorate([
+    base_1.characteristic
+], Rgbw.prototype, "current", void 0);
+__decorate([
+    base_1.characteristic
+], Rgbw.prototype, "errors", void 0);
 exports.Rgbw = Rgbw;
 //# sourceMappingURL=rgbw.js.map

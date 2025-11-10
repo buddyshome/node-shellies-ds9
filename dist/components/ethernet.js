@@ -15,7 +15,7 @@ class Ethernet extends base_1.Component {
     constructor(device) {
         super('Eth', device);
         /**
-         * IP address of the device.
+         * IP of the device in the network.
          */
         this.ip = null;
     }

@@ -15,19 +15,19 @@ class WiFi extends base_1.Component {
     constructor(device) {
         super('WiFi', device);
         /**
-         * IP address of the device.
+         * Ip of the device in the network (null if disconnected)
          */
         this.sta_ip = null;
         /**
-         * Status of the connection.
+         * Status of the connection. Range of values: disconnected, connecting, connected, got ip.
          */
         this.status = 'disconnected';
         /**
-         * SSID of the network.
+         * SSID of the network (null if disconnected).
          */
         this.ssid = null;
         /**
-         * Signal strength, in dBms.
+         * Strength of the signal in dBms.
          */
         this.rssi = 0;
     }
@@ -65,6 +65,9 @@ __decorate([
 __decorate([
     base_1.characteristic
 ], WiFi.prototype, "ssid", void 0);
+__decorate([
+    base_1.characteristic
+], WiFi.prototype, "bssid", void 0);
 __decorate([
     base_1.characteristic
 ], WiFi.prototype, "rssi", void 0);
