@@ -249,7 +249,9 @@ class Shellies extends eventemitter3_1.default {
                 await device.loadConfig();
             }
             this.pendingDevices.delete(deviceId);
-            // add the device
+            if (this.has(deviceId)) {
+                this.delete(deviceId);
+            }
             this.add(device);
         }
         catch (e) {

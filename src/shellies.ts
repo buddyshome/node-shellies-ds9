@@ -375,7 +375,10 @@ export class Shellies extends EventEmitter<ShelliesEvents> {
 
       this.pendingDevices.delete(deviceId);
 
-      // add the device
+      if (this.has(deviceId)) {
+        this.delete(deviceId);
+      }
+
       this.add(device);
     } catch (e) {
       this.pendingDevices.delete(deviceId);
