@@ -204,7 +204,7 @@ class Shellies extends eventemitter3_1.default {
      * Handles 'discover' events from device discoverers.
      */
     async handleDiscoveredDevice(identifiers) {
-        var _a;
+        var _a, _b;
         const deviceId = identifiers.deviceId;
         if (this.devices.has(deviceId) || this.pendingDevices.has(deviceId) || this.ignoredDevices.has(deviceId)) {
             // ignore if we've seen this device before
@@ -226,10 +226,12 @@ class Shellies extends eventemitter3_1.default {
             const info = await rpcHandler.request('Shelly.GetDeviceInfo');
             // make sure the returned device ID matches
             if (info.id.toLowerCase() !== deviceId.toLowerCase()) {
-                throw new Error(`Unexpected device ID (returned: ${info.id}, expected: ${deviceId})`);
+                if (((_a = info.name) === null || _a === void 0 ? void 0 : _a.toLowerCase()) !== deviceId.toLowerCase()) {
+                    throw new Error(`Unexpected device ID (returned: ${info.id}, expected: ${deviceId})`);
+                }
             }
             // get the device class for this model
-            const cls = devices_1.Device.getClass((_a = info.model) !== null && _a !== void 0 ? _a : '');
+            const cls = devices_1.Device.getClass((_b = info.model) !== null && _b !== void 0 ? _b : '');
             if (cls === undefined) {
                 // abort if we don't have a matching device class
                 this.ignoredDevices.add(deviceId);
