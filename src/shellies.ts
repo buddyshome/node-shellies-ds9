@@ -346,7 +346,9 @@ export class Shellies extends EventEmitter<ShelliesEvents> {
 
       // make sure the returned device ID matches
       if (info.id.toLowerCase() !== deviceId.toLowerCase()) {
-        throw new Error(`Unexpected device ID (returned: ${info.id}, expected: ${deviceId})`);
+        if (info.name?.toLowerCase() !== deviceId.toLowerCase()) {
+          throw new Error(`Unexpected device ID (returned: ${info.id}, expected: ${deviceId})`);
+        }
       }
 
       // get the device class for this model
