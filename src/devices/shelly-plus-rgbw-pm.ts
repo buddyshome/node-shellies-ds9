@@ -1,4 +1,4 @@
-import { component, Device } from './base';
+import {component, Device, MultiProfileDevice} from './base';
 import {
   BluetoothLowEnergy,
   Cloud,
@@ -6,15 +6,15 @@ import {
   Input,
   Mqtt,
   OutboundWebSocket,
+  Rgb,
+  Rgbw,
   Script,
   Light,
   Ui,
   WiFi,
 } from '../components';
-import {Rgb} from '../components/rgb';
-import {Rgbw} from '../components/rgbw';
 
-export class ShellyPlusRGBWPm extends Device {
+export class ShellyPlusRGBWPm extends MultiProfileDevice {
   static readonly model: string = 'SNDC-0D4P10WW';
   static readonly modelName: string = 'Shelly Plus RGBW PM';
 
