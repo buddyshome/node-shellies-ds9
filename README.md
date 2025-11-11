@@ -20,6 +20,7 @@ For the first generation, see [node-shellies](https://github.com/alexryd/node-sh
 - [Shelly Plus Plug UK](https://shelly-api-docs.shelly.cloud/gen2/Devices/Gen2/ShellyPlusPlugUK)
 - [Shelly Plus Plug IT](https://shelly-api-docs.shelly.cloud/gen2/Devices/Gen2/ShellyPlusPlugIT)
 - [Shelly Plus H&T](https://shelly-api-docs.shelly.cloud/gen2/Devices/Gen2/ShellyPlusHT)
+- [Shelly Plus Smoke](https://shelly-api-docs.shelly.cloud/gen2/Devices/Gen2/ShellyPlusSmoke)
 - [Shelly Plus Wall Dimmer](https://shelly-api-docs.shelly.cloud/gen2/Devices/Gen2/ShellyPlusWallDimmer)
 - [Shelly Plus RGBW PM](https://shelly-api-docs.shelly.cloud/gen2/Devices/Gen2/ShellyPlusRGBWPM)
 - [Shelly Plus 0-10V Dimmer](https://shelly-api-docs.shelly.cloud/gen2/Devices/Gen2/ShellyPlus10V)
@@ -62,6 +63,7 @@ For the first generation, see [node-shellies](https://github.com/alexryd/node-sh
 - [Shelly 1 PM](https://shelly-api-docs.shelly.cloud/gen2/Devices/Gen4/Shelly1PMG4)
 - [Shelly 1 Mini](https://shelly-api-docs.shelly.cloud/gen2/Devices/Gen4/ShellyMini1G4)
 - [Shelly 1 PM Mini](https://shelly-api-docs.shelly.cloud/gen2/Devices/Gen4/ShellyMini1PMG4)
+- [Shelly Flood](https://shelly-api-docs.shelly.cloud/gen2/Devices/Gen4/ShellyFlood)
 - [Shelly 2 PM](https://shelly-api-docs.shelly.cloud/gen2/Devices/Gen4/Shelly2PMG4)
 - [Shelly PowerStrip](https://shelly-api-docs.shelly.cloud/gen2/Devices/Gen4/ShellyPowerStripG4)
 

@@ -21,6 +21,7 @@ __exportStar(require("./gen2/shelly-plus-2-pm"), exports);
 __exportStar(require("./gen2/shelly-plus-i4"), exports);
 __exportStar(require("./gen2/shelly-plus-plug"), exports);
 __exportStar(require("./gen2/shelly-plus-ht"), exports);
+__exportStar(require("./gen2/shelly-plus-smoke"), exports);
 __exportStar(require("./gen2/shelly-plus-wall-dimmer"), exports);
 __exportStar(require("./gen2/shelly-plus-rgbw-pm"), exports);
 __exportStar(require("./gen2/shelly-plus-dimmer"), exports);
@@ -54,6 +55,7 @@ __exportStar(require("./gen4/shelly-1"), exports);
 __exportStar(require("./gen4/shelly-1-pm"), exports);
 __exportStar(require("./gen4/shelly-1-mini"), exports);
 __exportStar(require("./gen4/shelly-1-pm-mini"), exports);
+__exportStar(require("./gen4/shelly-flood"), exports);
 __exportStar(require("./gen4/shelly-2-pm"), exports);
 __exportStar(require("./gen4/shelly-power-strip"), exports);
 //# sourceMappingURL=index.js.map

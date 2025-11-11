@@ -5,6 +5,7 @@ export * from './gen2/shelly-plus-2-pm';
 export * from './gen2/shelly-plus-i4';
 export * from './gen2/shelly-plus-plug';
 export * from './gen2/shelly-plus-ht';
+export * from './gen2/shelly-plus-smoke';
 export * from './gen2/shelly-plus-wall-dimmer';
 export * from './gen2/shelly-plus-rgbw-pm';
 export * from './gen2/shelly-plus-dimmer';
@@ -38,6 +39,7 @@ export * from './gen4/shelly-1';
 export * from './gen4/shelly-1-pm';
 export * from './gen4/shelly-1-mini';
 export * from './gen4/shelly-1-pm-mini';
+export * from './gen4/shelly-flood';
 export * from './gen4/shelly-2-pm';
 export * from './gen4/shelly-power-strip';
 //# sourceMappingURL=index.d.ts.map
