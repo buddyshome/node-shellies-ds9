@@ -36,4 +36,8 @@ __exportStar(require("./pm1"), exports);
 __exportStar(require("./rgb"), exports);
 __exportStar(require("./rgbw"), exports);
 __exportStar(require("./cct"), exports);
+__exportStar(require("./smoke"), exports);
+__exportStar(require("./flood"), exports);
+__exportStar(require("./voltmeter"), exports);
+__exportStar(require("./illuminance"), exports);
 //# sourceMappingURL=index.js.map

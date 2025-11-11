@@ -20,4 +20,8 @@ export * from './pm1';
 export * from './rgb';
 export * from './rgbw';
 export * from './cct';
+export * from './smoke';
+export * from './flood';
+export * from './voltmeter';
+export * from './illuminance';
 //# sourceMappingURL=index.d.ts.map
