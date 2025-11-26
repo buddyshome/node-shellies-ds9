@@ -15,6 +15,10 @@
     "postversion": "git push && git push --tags",
     "pretty": "prettier --write \"./**/*.{js,jsx,json}\""
   },
+   "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/buddyshome/node-shellies-ds9.git"
