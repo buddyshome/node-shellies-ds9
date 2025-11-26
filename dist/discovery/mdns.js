@@ -135,9 +135,8 @@ class MdnsDeviceDiscoverer extends base_1.DeviceDiscoverer {
      * @param response - The response packets.
      */
     handleResponse(response) {
-        var _a, _b;
-        const answers = (_a = response.answers) !== null && _a !== void 0 ? _a : [];
-        const additionals = (_b = response.additionals) !== null && _b !== void 0 ? _b : [];
+        const answers = response.answers ?? [];
+        const additionals = response.additionals ?? [];
         const allRecords = answers.concat(additionals);
         const ptrAnswers = answers.filter((a) => a.type === 'PTR' && SERVICE_NAMES.includes(a.name));
         if (ptrAnswers.length === 0) {
@@ -189,7 +188,7 @@ class MdnsDeviceDiscoverer extends base_1.DeviceDiscoverer {
                     const text = typeof entry === 'string' ? entry : String(entry);
                     const [key, value] = text.split('=', 2);
                     if (key) {
-                        data.set(key, value !== null && value !== void 0 ? value : '');
+                        data.set(key, value ?? '');
                     }
                 }
             }

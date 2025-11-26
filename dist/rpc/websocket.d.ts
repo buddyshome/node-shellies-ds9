@@ -1,5 +1,6 @@
 /// <reference types="node" />
 /// <reference types="node" />
+/// <reference types="node" />
 import WebSocket from 'ws';
 import { JSONRPCClientWithAuthentication } from './auth';
 import { RpcHandler, RpcParams } from './base';

@@ -166,13 +166,12 @@ class Device extends eventemitter3_1.default {
      * Loads the status for all of the device's components and populates their characteristics.
      */
     async loadStatus() {
-        var _a;
         // retrieve the status
         const status = await this.shelly.getStatus();
         // update the components
         for (const cmpnt in status) {
             if (Object.prototype.hasOwnProperty.call(status, cmpnt) && typeof status[cmpnt] === 'object') {
-                (_a = this.getComponent(cmpnt)) === null || _a === void 0 ? void 0 : _a.update(status[cmpnt]);
+                this.getComponent(cmpnt)?.update(status[cmpnt]);
             }
         }
     }
@@ -196,11 +195,10 @@ class Device extends eventemitter3_1.default {
      * Handles 'statusUpdate' events from our RPC handler.
      */
     statusUpdateHandler(update) {
-        var _a;
         // update each components
         for (const cmpnt in update) {
             if (cmpnt !== 'ts' && Object.prototype.hasOwnProperty.call(update, cmpnt) && typeof update[cmpnt] === 'object') {
-                (_a = this.getComponent(cmpnt)) === null || _a === void 0 ? void 0 : _a.update(update[cmpnt]);
+                this.getComponent(cmpnt)?.update(update[cmpnt]);
             }
         }
     }
@@ -208,10 +206,9 @@ class Device extends eventemitter3_1.default {
      * Handles 'event' events from our RPC handler.
      */
     eventHandler(events) {
-        var _a;
         // pass each event on to its corresponding component
         for (const event of events.events) {
-            (_a = this.getComponent(event.component)) === null || _a === void 0 ? void 0 : _a.handleEvent(event);
+            this.getComponent(event.component)?.handleEvent(event);
         }
     }
 }
@@ -232,10 +229,9 @@ class MultiProfileDevice extends Device {
      * @param rpcHandler - Used to make remote procedure calls.
      */
     constructor(info, rpcHandler) {
-        var _a;
         super(info, rpcHandler);
         this.rpcHandler = rpcHandler;
-        this.profile = (_a = info.profile) !== null && _a !== void 0 ? _a : '';
+        this.profile = info.profile ?? '';
     }
 }
 exports.MultiProfileDevice = MultiProfileDevice;
