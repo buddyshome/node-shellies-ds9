@@ -34,6 +34,11 @@ exports.component = component;
  * Base class for all devices.
  */
 class Device extends eventemitter3_1.default {
+    rpcHandler;
+    /**
+     * Holds all registered subclasses.
+     */
+    static subclasses = new Map();
     /**
      * Registers a device class, so that it can later be found based on its device model
      * using the `Device.getClass()` method.
@@ -56,34 +61,45 @@ class Device extends eventemitter3_1.default {
         return Device.subclasses.get(model.toUpperCase());
     }
     /**
+     * The ID of this device.
+     */
+    id;
+    /**
+     * The MAC address of this device.
+     */
+    macAddress;
+    /**
+     * Information about the firmware that the device is running.
+     */
+    firmware;
+    /**
+     * This device's Shelly service.
+     */
+    shelly = new services_1.ShellyService(this);
+    /**
+     * This device's Schedule service.
+     */
+    schedule = new services_1.ScheduleService(this);
+    /**
+     * This device's Webhook service.
+     */
+    webhook = new services_1.WebhookService(this);
+    /**
+     * This device's HTTP service.
+     */
+    http = new services_1.HttpService(this);
+    /**
+     * This device's KVS service.
+     */
+    kvs = new services_1.KvsService(this);
+    system = new components_1.System(this);
+    /**
      * @param info - Information about this device.
      * @param rpcHandler - Used to make remote procedure calls.
      */
     constructor(info, rpcHandler) {
         super();
         this.rpcHandler = rpcHandler;
-        /**
-         * This device's Shelly service.
-         */
-        this.shelly = new services_1.ShellyService(this);
-        /**
-         * This device's Schedule service.
-         */
-        this.schedule = new services_1.ScheduleService(this);
-        /**
-         * This device's Webhook service.
-         */
-        this.webhook = new services_1.WebhookService(this);
-        /**
-         * This device's HTTP service.
-         */
-        this.http = new services_1.HttpService(this);
-        /**
-         * This device's KVS service.
-         */
-        this.kvs = new services_1.KvsService(this);
-        this.system = new components_1.System(this);
-        this._components = null;
         this.id = info.id;
         this.macAddress = info.mac;
         this.firmware = {
@@ -96,6 +112,7 @@ class Device extends eventemitter3_1.default {
         // handle events
         rpcHandler.on('event', this.eventHandler, this);
     }
+    _model;
     /**
      * The model designation of this device.
      */
@@ -108,6 +125,7 @@ class Device extends eventemitter3_1.default {
     get modelName() {
         return this.constructor.modelName;
     }
+    _components = null;
     /**
      * Maps component keys to property names.
      */
@@ -212,10 +230,6 @@ class Device extends eventemitter3_1.default {
         }
     }
 }
-/**
- * Holds all registered subclasses.
- */
-Device.subclasses = new Map();
 __decorate([
     exports.component
 ], Device.prototype, "system", void 0);
@@ -224,6 +238,11 @@ exports.Device = Device;
  * Base class for devices that have multiple profiles.
  */
 class MultiProfileDevice extends Device {
+    rpcHandler;
+    /**
+     * The current device profile.
+     */
+    profile;
     /**
      * @param info - Information about this device.
      * @param rpcHandler - Used to make remote procedure calls.

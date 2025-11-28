@@ -9,39 +9,59 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Switch = void 0;
 const base_1 = require("./base");
 /**
- * The Switch component handles a switch (relay) output terminal with optional power metering capabilities.
+ * Represents a switch (relay) of a device.
  */
 class Switch extends base_1.ComponentWithId {
+    /**
+     * Source of the last command.
+     */
+    source = '';
+    /**
+     * true if the output channel is currently on, false otherwise.
+     */
+    output = false;
+    /**
+     * Start time of the timer (as a UNIX timestamp, in UTC).
+     */
+    timer_started_at;
+    /**
+     * Duration of the timer, in seconds;
+     */
+    timer_duration;
+    /**
+     * The current (last measured) instantaneous power delivered to the attached
+     * load (if applicable).
+     */
+    apower;
+    /**
+     * Last measured voltage (in Volts, if applicable).
+     */
+    voltage;
+    /**
+     * Last measured current (in Amperes, if applicable).
+     */
+    current;
+    /**
+     * Last measured power factor (if applicable).
+     */
+    pf;
+    /**
+     * Information about the energy counter (if applicable).
+     */
+    aenergy;
+    /**
+     * Information about the temperature.
+     */
+    temperature = {
+        tC: null,
+        tF: null,
+    };
+    /**
+     * Any error conditions that have occurred.
+     */
+    errors;
     constructor(device, id = 0) {
         super('Switch', device, id);
-        /**
-         * Source of the last command, for example, init, WS_in, http, ...
-         */
-        this.source = '';
-        /**
-         * true if the output channel is currently on, false otherwise.
-         */
-        this.output = false;
-        /**
-         * Information about the temperature (shown if applicable).
-         */
-        this.temperature = {
-            tC: null,
-            tF: null,
-        };
-    }
-    /**
-     * Sets the output of the switch.
-     *
-     * @param on - Whether to switch on or off.
-     * @param toggle_after - Flip-back timer, in seconds.
-     */
-    set(on, toggle_after) {
-        return this.rpc('Set', {
-            id: this.id,
-            on,
-            toggle_after,
-        });
     }
     /**
      * Toggles the switch.
@@ -52,14 +72,15 @@ class Switch extends base_1.ComponentWithId {
         });
     }
     /**
-     * This method resets associated counters.
-     *
-     * @param type - Array of strings, selects which counter to reset.
+     * Sets the output of the switch.
+     * @param on - Whether to switch on or off.
+     * @param toggle_after - Flip-back timer, in seconds.
      */
-    resetCounters(type) {
-        return this.rpc('ResetCounters', {
+    set(on, toggle_after) {
+        return this.rpc('Set', {
             id: this.id,
-            type,
+            on,
+            toggle_after,
         });
     }
 }
@@ -89,13 +110,7 @@ __decorate([
 ], Switch.prototype, "pf", void 0);
 __decorate([
     base_1.characteristic
-], Switch.prototype, "freq", void 0);
-__decorate([
-    base_1.characteristic
 ], Switch.prototype, "aenergy", void 0);
-__decorate([
-    base_1.characteristic
-], Switch.prototype, "ret_aenergy", void 0);
 __decorate([
     base_1.characteristic
 ], Switch.prototype, "temperature", void 0);

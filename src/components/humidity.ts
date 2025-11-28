@@ -11,21 +11,20 @@ export interface HumidityConfig {
   id: number;
   name: string | null;
   report_thr: number;
-  offset: number;
 }
 
 /**
- * The Humidity component handles the monitoring of the device's humidity sensors.
+ * Handles the monitoring of a device's humidity sensor.
  */
 export class Humidity extends ComponentWithId<HumidityAttributes, HumidityConfig> implements HumidityAttributes {
   /**
-   * Relative humidity in % (null if a valid value could not be obtained).
+   * Relative humidity, in percent.
    */
   @characteristic
   readonly rh: number | null = null;
 
   /**
-   * Shown only if at least one error is present. May contain out_of_range, read when there is a problem reading sensor.
+   * Any error conditions that have occurred.
    */
   @characteristic
   readonly errors: string[] | undefined;

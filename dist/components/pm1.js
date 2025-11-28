@@ -9,24 +9,56 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Pm1 = void 0;
 const base_1 = require("./base");
 /**
- * The PM1 component handles electrical power metering capabilities.
+ * Handles the monitoring of a device's temperature sensor.
  */
 class Pm1 extends base_1.ComponentWithId {
+    /**
+    * true if the output channel is currently on, false otherwise.
+    */
+    output = false;
+    /**
+     * Last measured voltage in Volts
+     */
+    voltage;
+    /**
+     * Last measured current in Amperes
+     */
+    current;
+    /**
+    * Last measured instantaneous active power (in Watts) delivered to the attached load
+    */
+    apower;
+    /**
+    * Last measured instantaneous apparent power (in Volt-Amperes) delivered to the attached load (shown if applicable)
+    */
+    aprtpower;
+    /**
+    * Last measured power factor (shown if applicable)
+    */
+    pf;
+    /**
+    * Last measured network frequency (shown if applicable)
+    */
+    freq;
+    /**
+    * Information about the active energy counter
+    */
+    aenergy;
+    /**
+     * Information about the returned active energy counter
+     */
+    ret_aenergy;
+    /**
+     * Any error conditions that have occurred.
+     */
+    errors;
     constructor(device, id = 0) {
         super('Pm1', device, id);
     }
-    /**
-     * This method resets associated counters.
-     *
-     * @param type - Array of strings, selects which counter to reset.
-     */
-    resetCounters(type) {
-        return this.rpc('ResetCounters', {
-            id: this.id,
-            type,
-        });
-    }
 }
+__decorate([
+    base_1.characteristic
+], Pm1.prototype, "output", void 0);
 __decorate([
     base_1.characteristic
 ], Pm1.prototype, "voltage", void 0);

@@ -17,18 +17,4 @@ export * from './temperature';
 export * from './ui';
 export * from './wifi';
 export * from './pm1';
-export * from './rgb';
-export * from './rgbw';
-export * from './cct';
-export * from './smoke';
-export * from './flood';
-export * from './voltmeter';
-export * from './illuminance';
-export * from './em';
-export * from './em1';
-export * from './em-data';
-export * from './em1-data';
-export * from './plugs-ui';
-export * from './wd-ui';
-export * from './power-strip-ui';
 //# sourceMappingURL=index.d.ts.map

@@ -9,18 +9,26 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.DevicePower = void 0;
 const base_1 = require("./base");
 /**
- * The DevicePower component handles the monitoring of a device's battery charge and is only available on battery-operated devices.
+ * Handles the monitoring of a device's battery charge.
  */
 class DevicePower extends base_1.ComponentWithId {
+    /**
+     * Information about the battery charge.
+     */
+    battery = {
+        V: null,
+        percent: null,
+    };
+    /**
+     * Information about the external power source.
+     */
+    external;
+    /**
+     * Any error conditions that have occurred.
+     */
+    errors;
     constructor(device, id = 0) {
         super('DevicePower', device, id);
-        /**
-         * Information about the battery charge.
-         */
-        this.battery = {
-            V: null,
-            percent: null,
-        };
     }
 }
 __decorate([

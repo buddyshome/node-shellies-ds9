@@ -9,6 +9,7 @@ const eventemitter3_1 = __importDefault(require("eventemitter3"));
  * Base class for all remote procedure call (RPC) handlers.
  */
 class RpcHandler extends eventemitter3_1.default {
+    protocol;
     /**
      * @param protocol - The protocol used to send RPCs.
      */

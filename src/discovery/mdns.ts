@@ -1,6 +1,6 @@
-import os from 'os';
 import mDNS from 'multicast-dns';
-import { Answer, NaptrAnswer, SrvAnswer } from 'dns-packet';
+import os from 'os';
+
 import { DeviceDiscoverer } from './base';
 import { DeviceId } from '../devices';
 
@@ -25,7 +25,7 @@ const DEFAULT_MDNS_OPTIONS: Readonly<MdnsOptions> = {
 /**
  * The service name that Shelly devices use to advertise themselves.
  */
-const SERVICE_NAMES = ['_shelly._tcp.local', '_http._tcp.local'];
+const SERVICE_NAME = '_shelly._tcp.local';
 
 /**
  * A service that can discover Shelly devices using mDNS.
@@ -128,20 +128,15 @@ export class MdnsDeviceDiscoverer extends DeviceDiscoverer {
    * Queries for Shelly devices.
    */
   protected sendQuery(): Promise<void> {
-    const queries = SERVICE_NAMES.map(
-      (name) =>
-        new Promise<void>((resolve, reject) => {
-          this.mdns!.query(name, 'PTR', (error: Error | null) => {
-            if (error) {
-              reject(error);
-            } else {
-              resolve();
-            }
-          });
-        }),
-    );
-
-    return Promise.allSettled(queries).then(() => undefined);
+    return new Promise((resolve, reject) => {
+      this.mdns!.query(SERVICE_NAME, 'PTR', (error: Error | null) => {
+        if (error !== null) {
+          reject(error);
+        } else {
+          resolve();
+        }
+      });
+    });
   }
 
   /**
@@ -172,84 +167,37 @@ export class MdnsDeviceDiscoverer extends DeviceDiscoverer {
    * @param response - The response packets.
    */
   protected handleResponse(response: mDNS.ResponsePacket) {
-    const answers = response.answers ?? [];
-    const additionals = response.additionals ?? [];
-    const allRecords = answers.concat(additionals);
+    let deviceId: DeviceId | null = null;
 
-    const ptrAnswers: NaptrAnswer[] = answers.filter(
-      (a) =>
-        a.type === 'PTR' && SERVICE_NAMES.includes(a.name),
-    ) as NaptrAnswer[];
+    // see if this response contains our requested service
+    for (const a of response.answers) {
+      if (a.type === 'PTR' && a.name === SERVICE_NAME && a.data) {
+        // this is the right service
+        // get the device ID
+        deviceId = a.data.split('.', 1)[0];
+        break;
+      }
+    }
 
-    if (ptrAnswers.length === 0) {
+    // skip this response if it doesn't contain our requested service
+    if (!deviceId) {
       return;
     }
 
-    const ipMap = new Map<string, string>();
+    let ipAddress: string | null = null;
 
-    for (const a of allRecords) {
-      if ((a.type === 'A' || a.type === 'AAAA') && typeof a.name === 'string' && typeof a.data === 'string') {
-        if (!ipMap.has(a.name)) {
-          ipMap.set(a.name, a.data);
-        }
+    // find the device IP address among the answers
+    for (const a of response.answers.concat(response.additionals)) {
+      if (a.type === 'A') {
+        ipAddress = a.data;
       }
     }
 
-    for (const ptr of ptrAnswers) {
-      const instanceName = String(ptr.data);
-      const [fullId] = instanceName.split('.', 1);
-      const deviceId = fullId as DeviceId;
-
-      // TXT data pro konkrétní instanci
-      const txt = this.parseTxtData(allRecords, instanceName);
-      const gen = txt.get('gen');
-
-      if (!gen) {
-        continue;
-      }
-
-      const srv: SrvAnswer | undefined = allRecords.find((a) => a.type === 'SRV' && a.name === instanceName) as SrvAnswer | undefined;
-
-      let ipAddress: string | undefined;
-
-      if (srv && typeof srv.data === 'object' && srv.data && 'target' in (srv.data)) {
-        const target = (srv.data).target as string;
-        ipAddress = ipMap.get(target);
-      }
-
-      if (!ipAddress) {
-        ipAddress = Array.from(ipMap.values())[0];
-      }
-
-      if (ipAddress) {
-        this.handleDiscoveredDevice({
-          deviceId,
-          hostname: ipAddress,
-        });
-      }
+    if (ipAddress) {
+      this.handleDiscoveredDevice({
+        deviceId,
+        hostname: ipAddress,
+      });
     }
-  }
-
-  private parseTxtData(records: Answer[], name: string): Map<string, string> {
-    const data = new Map<string, string>();
-
-    for (const a of records) {
-      if (a.type !== 'TXT') {
-        continue;
-      }
-
-      if (a.name === name && Array.isArray(a.data)) {
-        for (const entry of a.data) {
-          const text = typeof entry === 'string' ? entry : String(entry);
-          const [key, value] = text.split('=', 2);
-
-          if (key) {
-            data.set(key, value ?? '');
-          }
-        }
-      }
-    }
-
-    return data;
   }
 }

@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Script = void 0;
 const base_1 = require("./base");
 /**
- * The Script component handles management of scripts on the device.
+ * Handles scripts on a device.
  */
 class Script extends base_1.ComponentBase {
     constructor(device) {
@@ -11,7 +11,6 @@ class Script extends base_1.ComponentBase {
     }
     /**
      * Retrieves the status of a script.
-     *
      * @param id - The script ID.
      */
     getStatus(id) {
@@ -21,7 +20,6 @@ class Script extends base_1.ComponentBase {
     }
     /**
      * Retrieves the configuration of a script.
-     *
      * @param id - The script ID.
      */
     getConfig(id) {
@@ -31,7 +29,6 @@ class Script extends base_1.ComponentBase {
     }
     /**
      * Requests changes in the configuration of a script.
-     *
      * @param id - The script ID.
      * @param config - The configuration options to set.
      */
@@ -49,7 +46,6 @@ class Script extends base_1.ComponentBase {
     }
     /**
      * Creates a new script.
-     *
      * @param name - The name of the script.
      */
     create(name) {
@@ -59,7 +55,6 @@ class Script extends base_1.ComponentBase {
     }
     /**
      * Removes a script.
-     *
      * @param id - The script ID.
      */
     delete(id) {
@@ -69,7 +64,6 @@ class Script extends base_1.ComponentBase {
     }
     /**
      * Runs a script.
-     *
      * @param id - The script ID.
      */
     start(id) {
@@ -79,7 +73,6 @@ class Script extends base_1.ComponentBase {
     }
     /**
      * Stops the execution of a script.
-     *
      * @param id - The script ID.
      */
     stop(id) {
@@ -89,7 +82,6 @@ class Script extends base_1.ComponentBase {
     }
     /**
      * Uploads code to a script.
-     *
      * @param id - The script ID.
      * @param code - The code to upload.
      * @param append - Whether the code should be appended to the script or overwrite any existing code.
@@ -103,7 +95,6 @@ class Script extends base_1.ComponentBase {
     }
     /**
      * Downloads code from a script.
-     *
      * @param id - The script ID.
      * @param offset - The byte offset from the beginning.
      * @param len - The number of bytes to download.
@@ -117,7 +108,6 @@ class Script extends base_1.ComponentBase {
     }
     /**
      * Evaluates or executes code inside of a script.
-     *
      * @param id - The script ID.
      * @param code - The code to evaluate.
      */

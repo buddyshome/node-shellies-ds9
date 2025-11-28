@@ -52,7 +52,6 @@ export interface ShellyMethods {
 }
 export interface ShellyDeviceInfo {
     id: string;
-    name?: string;
     mac: string;
     model: string;
     gen: number;

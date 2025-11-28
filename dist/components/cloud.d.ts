@@ -8,11 +8,11 @@ export interface CloudConfig {
     server: string | null;
 }
 /**
- * The cloud component is called Cloud. It handles cloud services of a device.
+ * Handles the Cloud services of a device.
  */
 export declare class Cloud extends Component<CloudAttributes, CloudConfig> implements CloudAttributes {
     /**
-     * True if the device is connected to the Shelly cloud, false otherwise.
+     * Whether the device is connected to the Shelly cloud.
      */
     readonly connected: boolean;
     constructor(device: Device);

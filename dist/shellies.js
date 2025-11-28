@@ -28,31 +28,35 @@ const DEFAULT_SHELLIES_OPTIONS = {
  */
 class Shellies extends eventemitter3_1.default {
     /**
+     * Factory used to create new `WebSocketRpcHandler`s.
+     */
+    websocket = new rpc_1.WebSocketRpcHandlerFactory();
+    /**
+     * Holds configuration options for this class.
+     */
+    options;
+    /**
+     * Holds all devices, mapped to their IDs for quick and easy access.
+     */
+    devices = new Map();
+    /**
+     * Event handlers bound to `this`.
+     */
+    discoverHandler = this.handleDiscoveredDevice.bind(this);
+    /**
+     * Holds IDs of devices that have been discovered but not yet added.
+     */
+    pendingDevices = new Set();
+    /**
+     * Holds IDs of devices that have been discovered but are excluded or whose
+     * model designation isn't recognized.
+     */
+    ignoredDevices = new Set();
+    /**
      * @param opts - A set of configuration options.
      */
     constructor(opts) {
         super();
-        /**
-         * Factory used to create new `WebSocketRpcHandler`s.
-         */
-        this.websocket = new rpc_1.WebSocketRpcHandlerFactory();
-        /**
-         * Holds all devices, mapped to their IDs for quick and easy access.
-         */
-        this.devices = new Map();
-        /**
-         * Event handlers bound to `this`.
-         */
-        this.discoverHandler = this.handleDiscoveredDevice.bind(this);
-        /**
-         * Holds IDs of devices that have been discovered but not yet added.
-         */
-        this.pendingDevices = new Set();
-        /**
-         * Holds IDs of devices that have been discovered but are excluded or whose
-         * model designation isn't recognized.
-         */
-        this.ignoredDevices = new Set();
         // store the options, with default values
         this.options = { ...DEFAULT_SHELLIES_OPTIONS, ...(opts || {}) };
     }
@@ -204,7 +208,7 @@ class Shellies extends eventemitter3_1.default {
      * Handles 'discover' events from device discoverers.
      */
     async handleDiscoveredDevice(identifiers) {
-        let deviceId = identifiers.deviceId;
+        const deviceId = identifiers.deviceId;
         if (this.devices.has(deviceId) || this.pendingDevices.has(deviceId) || this.ignoredDevices.has(deviceId)) {
             // ignore if we've seen this device before
             return;
@@ -225,13 +229,7 @@ class Shellies extends eventemitter3_1.default {
             const info = await rpcHandler.request('Shelly.GetDeviceInfo');
             // make sure the returned device ID matches
             if (info.id.toLowerCase() !== deviceId.toLowerCase()) {
-                if (info.name?.toLowerCase() === deviceId.toLowerCase()) {
-                    // Change deviceId to received
-                    deviceId = info.id;
-                }
-                else {
-                    throw new Error(`Unexpected device ID (returned: ${info.id}, expected: ${deviceId})`);
-                }
+                throw new Error(`Unexpected device ID (returned: ${info.id}, expected: ${deviceId})`);
             }
             // get the device class for this model
             const cls = devices_1.Device.getClass(info.model ?? '');
@@ -252,9 +250,7 @@ class Shellies extends eventemitter3_1.default {
                 await device.loadConfig();
             }
             this.pendingDevices.delete(deviceId);
-            if (this.has(deviceId)) {
-                this.delete(deviceId);
-            }
+            // add the device
             this.add(device);
         }
         catch (e) {

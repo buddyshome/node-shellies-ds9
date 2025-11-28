@@ -21,7 +21,6 @@ export interface SystemAttributes {
   restart_required: boolean;
   time: string;
   unixtime: number;
-  last_sync_ts: number | null;
   uptime: number;
   ram_size: number;
   ram_free: number;
@@ -31,13 +30,8 @@ export interface SystemAttributes {
   kvs_rev: number;
   schedule_rev?: number;
   webhook_rev?: number;
-  knx_rev?: number;
-  btrelay_rev?: number;
-  bthc_rev?: number;
   available_updates: SystemFirmwareUpdate;
   wakeup_reason?: SystemWakeupReason;
-  wakeup_period?: number;
-  utc_offset: number;
 }
 
 export interface SystemConfig {
@@ -48,8 +42,6 @@ export interface SystemConfig {
     fw_id: string;
     profile?: string;
     discoverable: boolean;
-    addon_type?: string | null;
-    sys_btn_toggle?: boolean;
   };
   location: {
     tz: string | null;
@@ -82,66 +74,59 @@ export interface SystemConfig {
 }
 
 /**
- * The system component provides information about general device status, resource usage, availability of firmware updates, etc.
+ * Handles the system services of a device.
  */
 export class System extends Component<SystemAttributes, SystemConfig> implements SystemAttributes {
   /**
-   * Mac address of the device.
+   * MAC address of the device.
    */
   @characteristic
   readonly mac: string = '';
 
   /**
-   * True if restart is required, false otherwise.
+   * true if a restart is required, false otherwise.
    */
   @characteristic
   readonly restart_required: boolean = false;
 
   /**
-   * Current time in the format HH:MM (24-hour time format in the current timezone with leading zero).
-   * Null when time is not synced from the NTP server.
+   * Local time in the current timezone (HH:MM).
    */
   @characteristic
   readonly time: string = '';
 
   /**
-   * Unix timestamp (in UTC), null when time is not synced from the NTP server.
+   * Current time in UTC as a UNIX timestamp.
    */
   @characteristic
   readonly unixtime: number = 0;
 
   /**
-   * Last time the system synced time from the NTP server (in UTC), null when time is not synced from the NTP server.
-   */
-  @characteristic
-  readonly last_sync_ts: number | null = null;
-
-  /**
-   * Time in seconds since the last reboot.
+   * Time in seconds since last reboot.
    */
   @characteristic
   readonly uptime: number = 0;
 
   /**
-   * Total size of the RAM in the system in Bytes.
+   * Total RAM, in bytes.
    */
   @characteristic
   readonly ram_size: number = 0;
 
   /**
-   * Size of the free RAM in the system in Bytes.
+   * Available RAM, in bytes.
    */
   @characteristic
   readonly ram_free: number = 0;
 
   /**
-   * Total size of the file system in Bytes.
+   * File system total size, in bytes.
    */
   @characteristic
   readonly fs_size: number = 0;
 
   /**
-   * Size of the free file system in Bytes.
+   * File system available size, in bytes.
    */
   @characteristic
   readonly fs_free: number = 0;
@@ -159,37 +144,19 @@ export class System extends Component<SystemAttributes, SystemConfig> implements
   readonly kvs_rev: number = 0;
 
   /**
-   * Schedules revision number, present if schedules are enabled.
+   * Schedule revision number (present if schedules are enabled).
    */
   @characteristic
   readonly schedule_rev: number | undefined;
 
   /**
-   * The amount of webhook revision, present if webhooks are enabled.
+   * Webhook revision number (present if schedules are enabled).
    */
   @characteristic
   readonly webhook_rev: number | undefined;
 
   /**
-   * KNX configuration revision number, present on devices supporting KNX with KNX enabled.
-   */
-  @characteristic
-  readonly knx_rev: number | undefined;
-
-  /**
-   * BLE cloud relay configuration revision number, present on devices supporting BLE cloud relay functionality.
-   */
-  @characteristic
-  readonly btrelay_rev: number | undefined;
-
-  /**
-   * BTHomeControl configuration revision number, present when the device supports control with BLU devices.
-   */
-  @characteristic
-  readonly bthc_rev: number | undefined;
-
-  /**
-   * Information about available updates, similar to the one returned by Shelly.CheckForUpdate
+   * Available firmware updates, if any.
    */
   @characteristic
   readonly available_updates: SystemFirmwareUpdate = {};
@@ -199,19 +166,6 @@ export class System extends Component<SystemAttributes, SystemConfig> implements
    */
   @characteristic
   readonly wakeup_reason: SystemWakeupReason | undefined;
-
-  /**
-   * Period (in seconds) at which a device wakes up and sends "keep-alive" packet to cloud, readonly.
-   * Count starts from the last full wakeup.
-   */
-  @characteristic
-  readonly wakeup_period: number | undefined;
-
-  /**
-   * Time offset (in seconds). This is the difference between the device's local time and UTC.
-   */
-  @characteristic
-  readonly utc_offset: number = 0;
 
   constructor(device: Device) {
     super('Sys', device);
@@ -237,18 +191,6 @@ export class System extends Component<SystemAttributes, SystemConfig> implements
 
       case 'sleep':
         this.emit('sleep');
-        break;
-
-      case 'scheduled_restart':
-        this.emit('scheduledRestart');
-        break;
-
-      case 'component_added':
-        this.emit('componentAdded', event.target);
-        break;
-
-      case 'component_removed':
-        this.emit('componentRemoved', event.target);
         break;
 
       default:

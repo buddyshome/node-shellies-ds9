@@ -9,15 +9,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Mqtt = void 0;
 const base_1 = require("./base");
 /**
- * The MQTT component handles configuration and status of the outbound MQTT connection.
+ * Handles configuration and status of the device's outbound MQTT connection.
  */
 class Mqtt extends base_1.Component {
+    /**
+     * Whether the device is connected to an MQTT server.
+     */
+    connected = false;
     constructor(device) {
         super('MQTT', device);
-        /**
-         * True if the device is MQTT connected, false otherwise.
-         */
-        this.connected = false;
     }
 }
 __decorate([

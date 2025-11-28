@@ -9,15 +9,19 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Humidity = void 0;
 const base_1 = require("./base");
 /**
- * The Humidity component handles the monitoring of the device's humidity sensors.
+ * Handles the monitoring of a device's humidity sensor.
  */
 class Humidity extends base_1.ComponentWithId {
+    /**
+     * Relative humidity, in percent.
+     */
+    rh = null;
+    /**
+     * Any error conditions that have occurred.
+     */
+    errors;
     constructor(device, id = 0) {
         super('Humidity', device, id);
-        /**
-         * Relative humidity in % (null if a valid value could not be obtained).
-         */
-        this.rh = null;
     }
 }
 __decorate([

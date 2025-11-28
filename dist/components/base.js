@@ -27,6 +27,12 @@ exports.characteristic = characteristic;
  * Base class for all device components.
  */
 class ComponentBase extends eventemitter3_1.default {
+    name;
+    device;
+    /**
+     * The key used to identify the component in status updates etc.
+     */
+    key;
     /**
      * @param name - The name of this component. Used when making RPCs.
      * @param device - The device that owns this component.
@@ -37,9 +43,9 @@ class ComponentBase extends eventemitter3_1.default {
         super();
         this.name = name;
         this.device = device;
-        this._characteristics = null;
         this.key = key !== null ? key : name.toLowerCase();
     }
+    _characteristics = null;
     /**
      * A list of all characteristics.
      */
@@ -128,6 +134,12 @@ exports.ComponentBase = ComponentBase;
  */
 class Component extends ComponentBase {
     /**
+     * The confoguration options for this component.
+     * Use the `getConfig()` method to load these options.
+     * This property is automatically populated by the `Device.loadConfig()` method.
+     */
+    config;
+    /**
      * Retrieves the status of this component.
      */
     getStatus() {
@@ -154,6 +166,7 @@ exports.Component = Component;
  * Base class for components with an ID.
  */
 class ComponentWithId extends Component {
+    id;
     /**
      * @param name - The name of this component. Used when making RPCs.
      * @param device - The device that owns this component.
