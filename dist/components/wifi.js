@@ -9,27 +9,31 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.WiFi = void 0;
 const base_1 = require("./base");
 /**
- * The WiFi component handles wireless connection services of a device.
+ * Handles the WiFi services of a device.
  */
 class WiFi extends base_1.Component {
+    /**
+     * IP address of the device.
+     */
+    sta_ip = null;
+    /**
+     * Status of the connection.
+     */
+    status = 'disconnected';
+    /**
+     * SSID of the network.
+     */
+    ssid = null;
+    /**
+     * Signal strength, in dBms.
+     */
+    rssi = 0;
+    /**
+     * Number of clients connected to the access point.
+     */
+    ap_client_count;
     constructor(device) {
         super('WiFi', device);
-        /**
-         * Ip of the device in the network (null if disconnected)
-         */
-        this.sta_ip = null;
-        /**
-         * Status of the connection. Range of values: disconnected, connecting, connected, got ip.
-         */
-        this.status = 'disconnected';
-        /**
-         * SSID of the network (null if disconnected).
-         */
-        this.ssid = null;
-        /**
-         * Strength of the signal in dBms.
-         */
-        this.rssi = 0;
     }
     /**
      * Retrieves a list of available networks.
@@ -65,9 +69,6 @@ __decorate([
 __decorate([
     base_1.characteristic
 ], WiFi.prototype, "ssid", void 0);
-__decorate([
-    base_1.characteristic
-], WiFi.prototype, "bssid", void 0);
 __decorate([
     base_1.characteristic
 ], WiFi.prototype, "rssi", void 0);

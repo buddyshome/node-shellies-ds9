@@ -9,68 +9,71 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.System = void 0;
 const base_1 = require("./base");
 /**
- * The system component provides information about general device status, resource usage, availability of firmware updates, etc.
+ * Handles the system services of a device.
  */
 class System extends base_1.Component {
+    /**
+     * MAC address of the device.
+     */
+    mac = '';
+    /**
+     * true if a restart is required, false otherwise.
+     */
+    restart_required = false;
+    /**
+     * Local time in the current timezone (HH:MM).
+     */
+    time = '';
+    /**
+     * Current time in UTC as a UNIX timestamp.
+     */
+    unixtime = 0;
+    /**
+     * Time in seconds since last reboot.
+     */
+    uptime = 0;
+    /**
+     * Total RAM, in bytes.
+     */
+    ram_size = 0;
+    /**
+     * Available RAM, in bytes.
+     */
+    ram_free = 0;
+    /**
+     * File system total size, in bytes.
+     */
+    fs_size = 0;
+    /**
+     * File system available size, in bytes.
+     */
+    fs_free = 0;
+    /**
+     * Configuration revision number.
+     */
+    cfg_rev = 0;
+    /**
+     * KVS (Key-Value Store) revision number.
+     */
+    kvs_rev = 0;
+    /**
+     * Schedule revision number (present if schedules are enabled).
+     */
+    schedule_rev;
+    /**
+     * Webhook revision number (present if schedules are enabled).
+     */
+    webhook_rev;
+    /**
+     * Available firmware updates, if any.
+     */
+    available_updates = {};
+    /**
+     * Information about boot type and cause (only for battery-operated devices).
+     */
+    wakeup_reason;
     constructor(device) {
         super('Sys', device);
-        /**
-         * Mac address of the device.
-         */
-        this.mac = '';
-        /**
-         * True if restart is required, false otherwise.
-         */
-        this.restart_required = false;
-        /**
-         * Current time in the format HH:MM (24-hour time format in the current timezone with leading zero).
-         * Null when time is not synced from the NTP server.
-         */
-        this.time = '';
-        /**
-         * Unix timestamp (in UTC), null when time is not synced from the NTP server.
-         */
-        this.unixtime = 0;
-        /**
-         * Last time the system synced time from the NTP server (in UTC), null when time is not synced from the NTP server.
-         */
-        this.last_sync_ts = null;
-        /**
-         * Time in seconds since the last reboot.
-         */
-        this.uptime = 0;
-        /**
-         * Total size of the RAM in the system in Bytes.
-         */
-        this.ram_size = 0;
-        /**
-         * Size of the free RAM in the system in Bytes.
-         */
-        this.ram_free = 0;
-        /**
-         * Total size of the file system in Bytes.
-         */
-        this.fs_size = 0;
-        /**
-         * Size of the free file system in Bytes.
-         */
-        this.fs_free = 0;
-        /**
-         * Configuration revision number.
-         */
-        this.cfg_rev = 0;
-        /**
-         * KVS (Key-Value Store) revision number.
-         */
-        this.kvs_rev = 0;
-        /**
-         * Information about available updates, similar to the one returned by Shelly.CheckForUpdate
-         */
-        this.available_updates = {};
-        /**
-         * Time offset (in seconds). This is the difference between the device's local time and UTC.
-         */
-        this.utc_offset = 0;
     }
     handleEvent(event) {
         switch (event.event) {
@@ -89,15 +92,6 @@ class System extends base_1.Component {
             case 'sleep':
                 this.emit('sleep');
                 break;
-            case 'scheduled_restart':
-                this.emit('scheduledRestart');
-                break;
-            case 'component_added':
-                this.emit('componentAdded', event.target);
-                break;
-            case 'component_removed':
-                this.emit('componentRemoved', event.target);
-                break;
             default:
                 super.handleEvent(event);
         }
@@ -115,9 +109,6 @@ __decorate([
 __decorate([
     base_1.characteristic
 ], System.prototype, "unixtime", void 0);
-__decorate([
-    base_1.characteristic
-], System.prototype, "last_sync_ts", void 0);
 __decorate([
     base_1.characteristic
 ], System.prototype, "uptime", void 0);
@@ -147,24 +138,9 @@ __decorate([
 ], System.prototype, "webhook_rev", void 0);
 __decorate([
     base_1.characteristic
-], System.prototype, "knx_rev", void 0);
-__decorate([
-    base_1.characteristic
-], System.prototype, "btrelay_rev", void 0);
-__decorate([
-    base_1.characteristic
-], System.prototype, "bthc_rev", void 0);
-__decorate([
-    base_1.characteristic
 ], System.prototype, "available_updates", void 0);
 __decorate([
     base_1.characteristic
 ], System.prototype, "wakeup_reason", void 0);
-__decorate([
-    base_1.characteristic
-], System.prototype, "wakeup_period", void 0);
-__decorate([
-    base_1.characteristic
-], System.prototype, "utc_offset", void 0);
 exports.System = System;
 //# sourceMappingURL=system.js.map

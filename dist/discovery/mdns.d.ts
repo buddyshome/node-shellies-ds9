@@ -60,6 +60,5 @@ export declare class MdnsDeviceDiscoverer extends DeviceDiscoverer {
      * @param response - The response packets.
      */
     protected handleResponse(response: mDNS.ResponsePacket): void;
-    private parseTxtData;
 }
 //# sourceMappingURL=mdns.d.ts.map

@@ -9,15 +9,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Cloud = void 0;
 const base_1 = require("./base");
 /**
- * The cloud component is called Cloud. It handles cloud services of a device.
+ * Handles the Cloud services of a device.
  */
 class Cloud extends base_1.Component {
+    /**
+     * Whether the device is connected to the Shelly cloud.
+     */
+    connected = false;
     constructor(device) {
         super('Cloud', device);
-        /**
-         * True if the device is connected to the Shelly cloud, false otherwise.
-         */
-        this.connected = false;
     }
 }
 __decorate([

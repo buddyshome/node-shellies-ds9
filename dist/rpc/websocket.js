@@ -11,6 +11,32 @@ const base_1 = require("./base");
  * Makes remote procedure calls (RPCs) over WebSockets.
  */
 class WebSocketRpcHandler extends base_1.RpcHandler {
+    hostname;
+    options;
+    /**
+     * The underlying websocket.
+     */
+    socket;
+    /**
+     * Handles parsing of JSON RPC requests and responses.
+     */
+    client;
+    /**
+     * Timeout used to schedule connection attempts and to send periodic ping requests.
+     */
+    timeout = null;
+    /**
+     * Indicates which value in the `reconnectInterval` option is currently being used.
+     */
+    reconnectIntervalIndex = 0;
+    /**
+     * Event handlers bound to `this`.
+     */
+    openHandler = this.handleOpen.bind(this);
+    closeHandler = this.handleClose.bind(this);
+    messageHandler = this.handleMessage.bind(this);
+    pongHandler = this.handlePong.bind(this);
+    errorHandler = this.handleError.bind(this);
     /**
      * @param hostname - The hostname of the Shelly device to connect to.
      * @param opts - Configuration options for this handler.
@@ -19,22 +45,6 @@ class WebSocketRpcHandler extends base_1.RpcHandler {
         super('websocket');
         this.hostname = hostname;
         this.options = options;
-        /**
-         * Timeout used to schedule connection attempts and to send periodic ping requests.
-         */
-        this.timeout = null;
-        /**
-         * Indicates which value in the `reconnectInterval` option is currently being used.
-         */
-        this.reconnectIntervalIndex = 0;
-        /**
-         * Event handlers bound to `this`.
-         */
-        this.openHandler = this.handleOpen.bind(this);
-        this.closeHandler = this.handleClose.bind(this);
-        this.messageHandler = this.handleMessage.bind(this);
-        this.pongHandler = this.handlePong.bind(this);
-        this.errorHandler = this.handleError.bind(this);
         this.socket = this.createSocket(`ws://${hostname}/rpc`);
         this.client = new auth_1.JSONRPCClientWithAuthentication((req) => this.handleRequest(req), options.password);
     }
@@ -324,24 +334,22 @@ exports.WebSocketRpcHandler = WebSocketRpcHandler;
  * Factory class used to create `WebSocketRpcHandler` instances.
  */
 class WebSocketRpcHandlerFactory {
-    constructor() {
-        /**
-         * Default `WebSocketRpcHandler` options.
-         */
-        this.defaultOptions = {
-            clientId: 'node-shellies-ds9-' + Math.round(Math.random() * 1000000),
-            requestTimeout: 10,
-            pingInterval: 60,
-            reconnectInterval: [
-                5,
-                10,
-                30,
-                60,
-                5 * 60,
-                10 * 60, // 10 minutes
-            ],
-        };
-    }
+    /**
+     * Default `WebSocketRpcHandler` options.
+     */
+    defaultOptions = {
+        clientId: 'node-shellies-ds9-' + Math.round(Math.random() * 1000000),
+        requestTimeout: 10,
+        pingInterval: 60,
+        reconnectInterval: [
+            5,
+            10,
+            30,
+            60,
+            5 * 60,
+            10 * 60, // 10 minutes
+        ],
+    };
     /**
      * Creates a new `WebSocketRpcHandler`.
      * @param hostname - The hostname of the Shelly device to connect to.

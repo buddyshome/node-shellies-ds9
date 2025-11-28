@@ -2,6 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Service = void 0;
 class Service {
+    name;
+    device;
     /**
      * @param name - The name of this service.
      * @param device - The device that owns this service.

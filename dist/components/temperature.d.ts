@@ -10,22 +10,21 @@ export interface TemperatureConfig {
     id: number;
     name: string | null;
     report_thr_C: number;
-    offset_C: number;
 }
 /**
- * The Temperature component handles the monitoring of the device's temperature sensors.
+ * Handles the monitoring of a device's temperature sensor.
  */
 export declare class Temperature extends ComponentWithId<TemperatureAttributes, TemperatureConfig> implements TemperatureAttributes {
     /**
-     * Temperature in Celsius (null if a valid value could not be obtained).
+     * Current temperature, in Celsius.
      */
     readonly tC: number | null;
     /**
-     * Temperature in Fahrenheit (null if a valid value could not be obtained).
+     * Current temperature, in Fahrenheit.
      */
     readonly tF: number | null;
     /**
-     * Shown only if at least one error is present. May contain out_of_range, read when there is a problem reading sensor.
+     * Any error conditions that have occurred.
      */
     readonly errors: string[] | undefined;
     constructor(device: Device, id?: number);
