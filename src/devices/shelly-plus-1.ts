@@ -66,3 +66,9 @@ export class ShellyPlus1V3 extends ShellyPlus1 {
 }
 
 Device.registerClass(ShellyPlus1V3);
+
+export class ShellyPlugSGen3EU extends ShellyPlus1 {
+  static readonly model: string = "S3PL-10112EU";
+}
+
+Device.registerClass(ShellyPlugSGen3EU);
