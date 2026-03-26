@@ -1,6 +1,6 @@
 {
   "name": "@buddyshome/shellies-ds9",
-  "version": "2.1.0",
+  "version": "2.1.2",
   "description": "Handles communication with the next generation of Shelly devices",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -9,9 +9,9 @@
   ],
   "scripts": {
     "build": "rimraf ./dist && tsc",
-    "lint": "eslint ./src --ext .ts,.js",
+    "lint": "eslint --ext .ts,.js",
     "test": "jest",
-    "preversion": "npm run build && npm run lint && npm test",
+    "preversion": "npm run lint && npm run build && npm test",
     "postversion": "git push && git push --tags",
     "pretty": "prettier --write \"./**/*.{js,jsx,json}\"",
     "link": "npm unlink @buddyhome/shellies-ds9 && npm link",
@@ -36,8 +36,8 @@
   },
   "devDependencies": {
     "@types/jest": "^29.5.14",
-    "@typescript-eslint/eslint-plugin": "^6.21.0",
-    "@typescript-eslint/parser": "^6.21.0",
+    "@typescript-eslint/eslint-plugin": "^8.57.2",
+    "@typescript-eslint/parser": "^8.57.2",
     "eslint": "^8.57.1",
     "eslint-config-prettier": "^9.1.2",
     "eslint-plugin-prettier": "^5.5.4",
